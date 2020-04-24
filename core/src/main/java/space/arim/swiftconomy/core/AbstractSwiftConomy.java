@@ -85,14 +85,14 @@ public abstract class AbstractSwiftConomy implements SwiftConomy, UUIDEconomy, U
 			return withdraw(uuid, -deposition);
 		}
 
-		AtomicLong account = getRawBalance(uuid);
-		if (account == null) {
+		AtomicLong balance = getRawBalance(uuid);
+		if (balance == null) {
 			return false;
 		} else if (deposition == 0L) {
 			return true;
 		}
 
-		getAndAdd(account, deposition);
+		getAndAdd(balance, deposition);
 		return true;
 	}
 
@@ -102,35 +102,35 @@ public abstract class AbstractSwiftConomy implements SwiftConomy, UUIDEconomy, U
 			return deposit(uuid, -withdrawal);
 		}
 
-		AtomicLong account = getRawBalance(uuid);
-		if (account == null) {
+		AtomicLong balance = getRawBalance(uuid);
+		if (balance == null) {
 			return false;
 		} else if (withdrawal == 0L) {
 			return true;
 		}
 
-		long current;
+		long existing;
 		long update;
 		do {
-			current = account.get();
-			update = current - withdrawal;
+			existing = balance.get();
+			update = existing - withdrawal;
 			if (update < 0) {
 				// player cannot enter into debt
 				return null;
 			}
-		} while (!compareAndSet(account, current, update));
+		} while (!compareAndSet(balance, existing, update));
 
 		return true;
 	}
 
 	@Override
-	public String displayBalanceWithCurrency(long internalBalance) {
-		return "$" + displayBalance(internalBalance) + " dollars";
+	public String displayBalanceWithCurrency(long balance) {
+		return "$" + displayBalance(balance) + " dollars";
 	}
 
 	@Override
-	public String displayBalance(long internalBalance) {
-		return display.toString(display.fromUnscaled(internalBalance, arithmetic.getScale()));
+	public String displayBalance(long balance) {
+		return display.toString(display.fromUnscaled(balance, arithmetic.getScale()));
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public abstract class AbstractSwiftConomy implements SwiftConomy, UUIDEconomy, U
 	
 	@Override
 	public int fractionalDigits() {
-		// WE handle the rounding, not just any random plugin
+		// We handle the rounding, not just any random plugin
 		return -1;
 	}
 	
@@ -205,14 +205,14 @@ public abstract class AbstractSwiftConomy implements SwiftConomy, UUIDEconomy, U
 
 	@Override
 	public double getBalance(OfflinePlayer player) {
-		AtomicLong account = getRawBalance(player.getUniqueId());
-		return (account != null) ? arithmetic.toDouble(account.get()) : -1D;
+		AtomicLong balance = getRawBalance(player.getUniqueId());
+		return (balance != null) ? arithmetic.toDouble(balance.get()) : -1D;
 	}
 
 	@Override
 	public boolean has(OfflinePlayer player, double amount) {
-		AtomicLong account = getRawBalance(player.getUniqueId());
-		return (account != null) && (account.get() > arithmetic.fromDouble(amount));
+		AtomicLong balance = getRawBalance(player.getUniqueId());
+		return (balance != null) && (balance.get() > arithmetic.fromDouble(amount));
 	}
 
 	@Override
@@ -221,24 +221,24 @@ public abstract class AbstractSwiftConomy implements SwiftConomy, UUIDEconomy, U
 			return depositPlayer(player, -amount);
 		}
 
-		AtomicLong account = getRawBalance(player.getUniqueId());
-		if (account == null) {
+		AtomicLong balance = getRawBalance(player.getUniqueId());
+		if (balance == null) {
 			return new EconomyResponse(amount, -1D, ResponseType.FAILURE, "Account does not exist for " + player.getUniqueId());
 		} else if (amount == 0D) {
-			return new EconomyResponse(amount, arithmetic.toDouble(account.get()), ResponseType.SUCCESS, null);
+			return new EconomyResponse(amount, arithmetic.toDouble(balance.get()), ResponseType.SUCCESS, null);
 		}
 
 		long withdrawal = arithmetic.fromDouble(amount);
-		long current;
+		long existing;
 		long update;
 		do {
-			current = account.get();
-			update = current - withdrawal;
+			existing = balance.get();
+			update = existing - withdrawal;
 			if (update < 0) {
 				// player cannot enter into debt
-				return new EconomyResponse(amount, arithmetic.toDouble(current), ResponseType.FAILURE, null);
+				return new EconomyResponse(amount, arithmetic.toDouble(existing), ResponseType.FAILURE, null);
 			}
-		} while (!compareAndSet(account, current, update));
+		} while (!compareAndSet(balance, existing, update));
 
 		return new EconomyResponse(amount, arithmetic.toDouble(update), ResponseType.SUCCESS, null);
 	}
@@ -249,20 +249,20 @@ public abstract class AbstractSwiftConomy implements SwiftConomy, UUIDEconomy, U
 			return withdrawPlayer(player, -amount);
 		}
 
-		AtomicLong account = getRawBalance(player.getUniqueId());
-		if (account == null) {
+		AtomicLong balance = getRawBalance(player.getUniqueId());
+		if (balance == null) {
 			return new EconomyResponse(amount, -1D, ResponseType.FAILURE, "Account does not exist for " + player.getUniqueId());
 		} else if (amount == 0D) {
-			return new EconomyResponse(amount, arithmetic.toDouble(account.get()), ResponseType.SUCCESS, null);
+			return new EconomyResponse(amount, arithmetic.toDouble(balance.get()), ResponseType.SUCCESS, null);
 		}
 
-		long updated = addAndGet(account, arithmetic.fromDouble(amount));
-		return new EconomyResponse(amount, arithmetic.toDouble(updated), ResponseType.SUCCESS, null);
+		long update = addAndGet(balance, arithmetic.fromDouble(amount));
+		return new EconomyResponse(amount, arithmetic.toDouble(update), ResponseType.SUCCESS, null);
 	}
 
 	@Override
 	public boolean createPlayerAccount(OfflinePlayer player) {
-		// WE create accounts, not just any random plugin
+		// We create accounts, not just any random plugin
 		return false;
 	}
 	

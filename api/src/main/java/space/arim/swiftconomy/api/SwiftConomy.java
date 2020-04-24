@@ -101,19 +101,19 @@ public interface SwiftConomy {
 	 * Formats the internal balance of a user including currency units. <br>
 	 * For example, this might display "$15.00 dollars"
 	 * 
-	 * @param internalBalance the raw balance
+	 * @param balance the raw balance
 	 * @return the formatted display
 	 */
-	String displayBalanceWithCurrency(long internalBalance);
+	String displayBalanceWithCurrency(long balance);
 	
 	/**
 	 * Formats the internal balance of a user as a simple number. <br>
 	 * For example, this might display "15.00".
 	 * 
-	 * @param internalBalance the raw balance
+	 * @param balance the raw balance
 	 * @return the formatted display
 	 */
-	String displayBalance(long internalBalance);
+	String displayBalance(long balance);
 	
 	/**
 	 * Gets the decimal4j arithmetic which SwiftConomy uses.
