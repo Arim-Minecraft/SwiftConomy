@@ -42,7 +42,7 @@ public interface SwiftConomy {
 	/**
 	 * Gets the internal balance for the player. <br>
 	 * If no balance is stored corresponding to the uuid,
-	 * <code>-1</code> is returned.
+	 * <code>{@literal -}1</code> is returned.
 	 * 
 	 * @param uuid the uuid of the player
 	 * @return the raw balance or <code>null</code> if not found
