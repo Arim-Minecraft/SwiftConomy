@@ -50,36 +50,6 @@ public interface SwiftConomy {
 	long getBalance(UUID uuid);
 	
 	/**
-	 * Deposits the given amount on behalf of the player. <br>
-	 * <br>
-	 * If there is no balance stored corresponding to the uuid,
-	 * nothing happens, <code>false</code> is returned. <br>
-	 * Otherwise, the balance is added to the player's account and
-	 * <code>true</code> is returned.
-	 * 
-	 * @param uuid the uuid of the player
-	 * @param deposition the amount to deposit, an unscaled long (see decimal4j)
-	 * @return true if the player had a balance, false otherwise
-	 */
-	boolean deposit(UUID uuid, long deposition);
-	
-	/**
-	 * Withdraws the given amount on behalf of the player. <br>
-	 * <br>
-	 * If the withdrawal cannot take place because it would otherwise
-	 * force the player to enter into debt, <code>null</code> is returned. <br>
-	 * If there is no balance stored corresponding to the uuid,
-	 * nothing happens, <code>false</code> is returned. <br>
-	 * Otherwise, the balance is subtracted from the player's account and
-	 * <code>true</code> is returned.
-	 * 
-	 * @param uuid the uuid of the player
-	 * @param withdrawal the amount to withdraw, an unscaled long (see decimal4j)
-	 * @return a tristate indicating success (true), failed withdrawal (null), or no account (false)
-	 */
-	Boolean withdraw(UUID uuid, long withdrawal);
-	
-	/**
 	 * Gets all uuids for which balances are stored. <br>
 	 * The returned collection is a copy representing the state of SwiftConomy at call time. <br>
 	 * <br>
@@ -89,6 +59,43 @@ public interface SwiftConomy {
 	 * @return a copy of all uuids for which balances are stored, may or may not be mutable
 	 */
 	Collection<UUID> getAllUUIDs();
+	
+	/**
+	 * Deposits the given amount on behalf of the player. <br>
+	 * <br>
+	 * The amount should be positive. However, if the specified amount is negative,
+	 * the result of {@link #withdraw(UUID, long)} using a positive amount is returned,
+	 * in which case this may return <code>null</code>. <br>
+	 * <br>
+	 * If there is no balance stored corresponding to the uuid,
+	 * nothing happens, <code>false</code> is returned. <br>
+	 * Otherwise, the balance is added to the player's account
+	 * and <code>true</code> is returned.
+	 * 
+	 * @param uuid the uuid of the player
+	 * @param deposition the amount to deposit, an unscaled long (see decimal4j)
+	 * @return true if the player had a balance, false otherwise
+	 */
+	Boolean deposit(UUID uuid, long deposition);
+	
+	/**
+	 * Withdraws the given amount on behalf of the player. <br>
+	 * <br>
+	 * The amount should be positive. However, if the specified amount is negative,
+	 * the result of {@link #deposit(UUID, long)} using a positive amount is returned. <br>
+	 * <br>
+	 * If there is no balance stored corresponding to the uuid,
+	 * nothing happens, <code>false</code> is returned. <br>
+	 * If the withdrawal cannot take place because it would otherwise
+	 * force the player to enter into debt, <code>null</code> is returned. <br>
+	 * Otherwise, the balance is subtracted from the player's account
+	 * and <code>true</code> is returned.
+	 * 
+	 * @param uuid the uuid of the player
+	 * @param withdrawal the amount to withdraw, an unscaled long (see decimal4j)
+	 * @return a tristate indicating success (true), failed withdrawal (null), or no account (false)
+	 */
+	Boolean withdraw(UUID uuid, long withdrawal);
 	
 	/**
 	 * Formats the internal balance of a user including currency units. <br>
