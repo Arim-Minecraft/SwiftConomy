@@ -31,7 +31,7 @@ import org.decimal4j.api.DecimalArithmetic;
  * <br>
  * Once it is understood how decimal4j works, how SwiftConomy works becomes clear. <br>
  * <br>
- * The balance of each player is stored internally as a long (really an AtomicLong for concurrency purposes).
+ * The balance of each player is stored internally as a long (usually an AtomicLong under the cover).
  * This such balance may be referred to as the "raw balance" or the "internal balance".
  * 
  * @author A248
