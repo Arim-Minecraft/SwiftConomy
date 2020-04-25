@@ -145,7 +145,7 @@ public abstract class AbstractSwiftConomy implements SwiftConomy, UUIDEconomy, U
 	
 	private static boolean compareAndSet(AtomicLong atomLong, long expect, long update) {
 		if (!atomLong.compareAndSet(expect, update)) {
-			LockSupport.parkNanos(1);
+			LockSupport.parkNanos(1L);
 			return false;
 		}
 		return true;
