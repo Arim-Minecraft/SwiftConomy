@@ -21,7 +21,6 @@ package space.arim.swiftconomy.importer;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 
 import space.arim.swiftconomy.api.SwiftConomy;
 
@@ -29,14 +28,15 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public abstract class Importer {
-	
+
 	private final SwiftConomy economy;
 	private final ImportSource<?> source;
-	private final Consumer<Map<UUID, Long>> asyncAcceptor;
 	
 	public CompletableFuture<?> start() {
 		source.link();
-		return source.convertBalances(economy.getArithmetic()).thenAcceptAsync(asyncAcceptor).thenRun(source::unlink);
+		return source.convertBalances(economy.getArithmetic()).thenAcceptAsync(this::processResultsAsync).thenRun(source::unlink);
 	}
+	
+	protected abstract void processResultsAsync(Map<UUID, Long> results);
 	
 }
