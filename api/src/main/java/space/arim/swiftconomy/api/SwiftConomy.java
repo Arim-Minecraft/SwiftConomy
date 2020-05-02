@@ -98,6 +98,26 @@ public interface SwiftConomy {
 	Boolean withdraw(UUID uuid, long withdrawal);
 	
 	/**
+	 * Makes one player pay another a specified amount. <br>
+	 * <br>
+	 * The amount should be positive. However, if the specified amount is negative, the result of
+	 * the same method with the giver and receiver parameters reversed is returned. <br>
+	 * <br>
+	 * If there is no balance stored corresponding to either uuid,
+	 * nothing happens, <code>false</code> is returned. <br>
+	 * If the withdrawal cannot take place because it would otherwise
+	 * force the giver to enter into debt, <code>null</code> is returned. <br>
+	 * Otherwise, the balance is subtracted from the giver's account,
+	 * added to the receiver's account, and <code>true</code> is returned.
+	 * 
+	 * @param giver the giver who will pay
+	 * @param receiver the receive who will be paid
+	 * @param transaction the amount which will be paid
+	 * @return a tristate indicating success (true), failed withdrawal (null), or no account (false)
+	 */
+	Boolean pay(UUID giver, UUID receiver, long transaction);
+	
+	/**
 	 * Formats the internal balance of a user including currency units. <br>
 	 * For example, this might display "$15.00 dollars"
 	 * 
