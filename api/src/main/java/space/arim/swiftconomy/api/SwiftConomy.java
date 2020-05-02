@@ -101,7 +101,7 @@ public interface SwiftConomy {
 	 * Makes one player pay another a specified amount. <br>
 	 * <br>
 	 * The amount should be positive. However, if the specified amount is negative, the result of
-	 * the same method with the giver and receiver parameters reversed is returned. <br>
+	 * the same method with the giver and receiver parameters reversed using a positive amount is returned. <br>
 	 * <br>
 	 * If there is no balance stored corresponding to either uuid,
 	 * nothing happens, <code>false</code> is returned. <br>
