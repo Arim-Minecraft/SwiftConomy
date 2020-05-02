@@ -122,6 +122,33 @@ public abstract class AbstractSwiftConomy implements SwiftConomy, UUIDEconomy, U
 
 		return true;
 	}
+	
+	@Override
+	public Boolean pay(UUID giver, UUID receiver, long transaction) {
+		if (transaction < 0) {
+			return pay(receiver, giver, -transaction);
+		}
+		AtomicLong giverBal = getRawBalance(giver);
+		AtomicLong receiverBal = getRawBalance(receiver);
+		if (giverBal == null || receiverBal == null) {
+			return false;
+		} else if (transaction == 0L) {
+			return true;
+		}
+
+		long existing;
+		long update;
+		do {
+			existing = giverBal.get();
+			update = existing - transaction;
+			if (update < 0) {
+				// player cannot enter into debt
+				return null;
+			}
+		} while (!compareAndSet(giverBal, existing, update));
+		getAndAdd(receiverBal, transaction);
+		return true;
+	}
 
 	@Override
 	public String displayBalanceWithCurrency(long balance) {
