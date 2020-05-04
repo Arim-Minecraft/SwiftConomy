@@ -124,16 +124,18 @@ public interface SwiftConomy {
 	 * @param balance the raw balance
 	 * @return the formatted display
 	 */
-	String displayBalanceWithCurrency(long balance);
+	String displayBalance(long balance);
 	
 	/**
 	 * Formats the internal balance of a user as a simple number. <br>
-	 * For example, this might display "15.00".
+	 * For example, this might display "15.00". <br>
+	 * <br>
+	 * <b>This method is rarely required. Please use {@link #displayBalance(long)} for most purposes. <b>
 	 * 
 	 * @param balance the raw balance
 	 * @return the formatted display
 	 */
-	String displayBalance(long balance);
+	String displayBalanceWithoutCurrency(long balance);
 	
 	/**
 	 * Gets the decimal4j arithmetic which SwiftConomy uses.

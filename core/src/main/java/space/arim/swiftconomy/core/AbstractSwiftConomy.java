@@ -151,12 +151,21 @@ public abstract class AbstractSwiftConomy implements SwiftConomy, UUIDEconomy, U
 	}
 
 	@Override
-	public String displayBalanceWithCurrency(long balance) {
-		return "$" + displayBalance(balance) + " dollars";
+	public String displayBalance(long balance) {
+		if (balance < 1000L) {
+			return "$" + displayBalanceWithoutCurrency(balance);
+		} else if (balance > 1000_000_000_000_000_000L) {
+			
+		}
+		int exp = (int) (Math.log10(balance) / 3);
+	    return String.format("%.1f %c",
+	                         balance / Math.pow(1000, exp),
+	                         "KMBTQ".charAt(exp-1));
+		//return "$" + displayBalanceWithoutCurrency(balance) + " dollars";
 	}
 
 	@Override
-	public String displayBalance(long balance) {
+	public String displayBalanceWithoutCurrency(long balance) {
 		return display.toString(display.fromUnscaled(balance, arithmetic.getScale()));
 	}
 
@@ -212,7 +221,7 @@ public abstract class AbstractSwiftConomy implements SwiftConomy, UUIDEconomy, U
 	
 	@Override
 	public String format(double amount) {
-		return displayBalanceWithCurrency(arithmetic.fromDouble(amount));
+		return displayBalance(arithmetic.fromDouble(amount));
 	}
 	
 	@Override
