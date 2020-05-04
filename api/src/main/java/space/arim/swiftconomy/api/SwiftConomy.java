@@ -27,7 +27,7 @@ import org.decimal4j.api.DecimalArithmetic;
  * SwiftConomy official API <br>
  * <br>
  * SwiftConomy is designed to use decimal4j's zero garbage computations: <br>
- * <a href=https://github.com/tools4j/decimal4j/wiki/DecimalArithmetic-API> <br>
+ * <a href=https://github.com/tools4j/decimal4j/wiki/DecimalArithmetic-API>Decimal Arithmetic API</a> <br>
  * <br>
  * Once it is understood how decimal4j works, how SwiftConomy works becomes clear. <br>
  * <br>
