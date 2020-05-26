@@ -130,7 +130,7 @@ public interface SwiftConomy {
 	 * Formats the internal balance of a user as a simple number. <br>
 	 * For example, this might display "15.00". <br>
 	 * <br>
-	 * <b>This method is rarely required. Please use {@link #displayBalance(long)} for most purposes. <b>
+	 * <b>This method is rarely required. Please use {@link #displayBalance(long)} for most purposes. </b>
 	 * 
 	 * @param balance the raw balance
 	 * @return the formatted display
